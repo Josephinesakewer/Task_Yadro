@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:13-alpine
+    environment:
+      POSTGRES_USER: daguser
+      POSTGRES_PASSWORD: dagpass
+      POSTGRES_DB: dagdb
+      LC_ALL: en_US.UTF-8
+      LANG: en_US.UTF-8
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+    environment:
+      DATABASE_URL: postgresql+psycopg2://daguser:dagpass@postgres/dagdb?client_encoding=utf8
+
+
+volumes:
+  postgres_data:
